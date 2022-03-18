@@ -1,0 +1,3983 @@
+{
+	"info": {
+		"_postman_id": "fc06bbda-29ca-48c9-b066-440ad8faec87",
+		"name": "PSD2 Sandbox - Sparebanken Vest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AIS",
+			"item": [
+				{
+					"name": "Consent",
+					"item": [
+						{
+							"name": "Create Consent All Accounts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID\", pm.response.json().consentId);",
+											"pm.environment.set(\"CREATED_ALL_ACCOUNTS_WITH_DETAILS_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[5]);",
+											"",
+											"pm.test(\"Create consent request returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.not.be.empty;",
+											"    pm.expect(jsonData.consentId).to.not.be.empty;",
+											"    pm.expect(jsonData._links).to.not.be.empty;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"validUntil\":\"{{executionDate}}\",\r\n    \"access\":{\r\n        \"accounts\": [],\r\n        \"balances\": [],\r\n        \"transactions\": []\r\n    },\r\n    \"frequencyPerDay\": 4,\r\n    \"recurringIndicator\": true,\r\n    \"combinedServiceIndicator\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/consents",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Consent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Consent Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Authorisations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}/authorisations/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"authorisations",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"NEW_AUTHORISATION_ID\", pm.response.json().authorisationId;",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationId).to.not.be.empty;",
+											"    pm.expect(jsonData.scaStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Account Consent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{ClientUserIdOrFnr}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/consents/{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"consents",
+										"{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Operations",
+					"item": [
+						{
+							"name": "List All Accounts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().accounts[0].resourceId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.accounts).to.not.be.empty;",
+											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "Consent-ID",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Details With Balance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
+											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts/{{ACCOUNT_RESOURCE_ID}}?withBalance=true",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts",
+										"{{ACCOUNT_RESOURCE_ID}}"
+									],
+									"query": [
+										{
+											"key": "withBalance",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();    ",
+											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts/{{ACCOUNT_RESOURCE_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts",
+										"{{ACCOUNT_RESOURCE_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Balances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
+											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts/{{ACCOUNT_RESOURCE_ID}}/balances",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts",
+										"{{ACCOUNT_RESOURCE_ID}}",
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set(\"SPECIFIC_ACCOUNT_TRANSACTION_ID\", jsonData.transactions.booked[0].transactionId);",
+											"    pm.expect(jsonData.account.bban).to.equal(\"36330000001\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts/{{ACCOUNT_RESOURCE_ID}}/transactions?BookingStatus=both&dateFrom=2022-01-01",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts",
+										"{{ACCOUNT_RESOURCE_ID}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "BookingStatus",
+											"value": "both"
+										},
+										{
+											"key": "dateFrom",
+											"value": "2022-01-01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account Transaction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/accounts/{{ACCOUNT_RESOURCE_ID}}/transactions/{{SPECIFIC_ACCOUNT_TRANSACTION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"accounts",
+										"{{ACCOUNT_RESOURCE_ID}}",
+										"transactions",
+										"{{SPECIFIC_ACCOUNT_TRANSACTION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List All Card Accounts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"CARD_ACCOUNT_RESOURCE_ID\", pm.response.json().cardAccounts[0].resourceId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.accounts).to.not.be.empty;",
+											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "Consent-ID",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/card-accounts",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"card-accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List All Card Accounts With Balances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"CARD_ACCOUNT_RESOURCE_ID\", pm.response.json().cardAccounts[0].resourceId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.accounts).to.not.be.empty;",
+											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "Consent-ID",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/card-accounts?withBalance=true",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"card-accounts"
+									],
+									"query": [
+										{
+											"key": "withBalance",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Card Account Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().accounts[0].resourceId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.accounts).to.not.be.empty;",
+											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "Consent-ID",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/card-accounts/{{CARD_ACCOUNT_RESOURCE_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"card-accounts",
+										"{{CARD_ACCOUNT_RESOURCE_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Card Account Balances",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().accounts[0].resourceId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.accounts).to.not.be.empty;",
+											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "Consent-ID",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/card-accounts/{{CARD_ACCOUNT_RESOURCE_ID}}/balances",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"card-accounts",
+										"{{CARD_ACCOUNT_RESOURCE_ID}}",
+										"balances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Card Transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
+											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"type": "text",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Consent-ID",
+										"type": "text",
+										"value": "{{CREATED_ALL_ACCOUNTS_WITH_DETAILS_CONSENT_ID}}"
+									},
+									{
+										"key": "PSU-ID",
+										"type": "text",
+										"value": "{{ConsentClientUserId}}"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"type": "text",
+										"value": "{{PsuIpAddress}}"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"type": "text",
+										"value": "{{TPP-Redirect-URI}}"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/card-accounts/{{CARD_ACCOUNT_RESOURCE_ID}}/transactions?bookingStatus=both&dateFrom=2022-01-01",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"card-accounts",
+										"{{CARD_ACCOUNT_RESOURCE_ID}}",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "bookingStatus",
+											"value": "both"
+										},
+										{
+											"key": "dateFrom",
+											"value": "2022-01-01"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PIS",
+			"item": [
+				{
+					"name": "Norwegian Domestic",
+					"item": [
+						{
+							"name": "Payment Initiate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"DOMESTIC_PAYMENT_ID\", pm.response.json().paymentId);\r",
+											"pm.environment.set(\"DOMESTIC_PAYMENT_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"endToEndIdentification\": \"878a7ec502c3408e8d708210a093f23f\",\r\n    \"debtorAccount\": {\r\n        \"bban\": \"36330000001\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"NOK\",\r\n        \"amount\": \"3.92\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"bban\": \"12100000006\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"creditorName\": \"Emma Larsen\",\r\n    \"remittanceInformationUnstructured\": \"Testing payment initiation\",\r\n    \"requestedExecutionDate\": \"2022-02-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Payment Before SCA",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    //will have status 204 if done before payment sca",
+											"    pm.response.to.have.status(204);",
+											"});",
+											"",
+											"pm.environment.set(\"DOMESTIC_PAYMENT_CANCELLATION_AUTHORISATION_ID\", pm.response.json()._links.scaRedirect.href.split( '/' )[6].split( '#' )[1]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Authorisations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/authorisations/{{DOMESTIC_PAYMENT_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"authorisations",
+										"{{DOMESTIC_PAYMENT_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"NEW_AUTHORISATION_ID\", pm.response.json().authorisationId;",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationId).to.not.be.empty;",
+											"    pm.expect(jsonData.scaStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment Status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202\", function () {",
+											"    //will have status 202 if preconfirmed through sca - 204 otherwise",
+											"    pm.response.to.have.status(202);",
+											"});",
+											"",
+											"pm.environment.set(\"DOMESTIC_PAYMENT_CANCELLATION_AUTHORISATION_ID\", pm.response.json()._links.scaRedirect.href.split( '/' )[6].split( '#' )[1]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Cancellation Authorisations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/cancellation-authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"cancellation-authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Cancellation Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/cancellation-authorisations/{{DOMESTIC_PAYMENT_CANCELLATION_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"cancellation-authorisations",
+										"{{DOMESTIC_PAYMENT_CANCELLATION_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Cancellation Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"NEW_AUTHORISATION_ID\", pm.response.json().authorisationId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationId).to.not.be.empty;",
+											"    pm.expect(jsonData.scaStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/cancellation-authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"cancellation-authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get New Cancellation Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{DOMESTIC_PAYMENT_ID}}/cancellation-authorisations/{{NEW_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{DOMESTIC_PAYMENT_ID}}",
+										"cancellation-authorisations",
+										"{{NEW_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cross Border",
+					"item": [
+						{
+							"name": "Payment Initiate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"CROSS_BORDER_PAYMENT_ID\", pm.response.json().paymentId);\r",
+											"pm.environment.set(\"CROSS_BORDER_PAYMENT_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"endToEndIdentification\": \"e91b0296c9e0490bbb1a2525cf1b8a1\",\r\n    \"debtorAccount\": {\r\n        \"bban\": \"36330000001\",\r\n        \"currency\": \"USD\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"bban\": \"DE91100000000123456789\",\r\n        \"currency\": \"EUR\"\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"EUR\",\r\n        \"amount\": \"0.05\"\r\n    },\r\n    \"creditorAgent\": \"SAIBJPJTXXX\",\r\n    \"creditorName\": \"Ben Bauer\",\r\n    \"creditorAddress\": {\r\n        \"streetName\": \"Strasse\",\r\n        \"buildingNumber\": \"1\",\r\n        \"postCode\": \"1111\",\r\n        \"townName\": \"Berlin\",\r\n        \"country\": \"DE\"\r\n    },\r\n    \"regulatoryReportingAmount\": {\r\n        \"currency\": \"EUR\",\r\n        \"amount\": \"0.05\"\r\n    },\r\n    \"regulatoryReportingCode\": \"14\",\r\n    \"regulatoryReportingInformation\": \"Related business information\",\r\n    \"requestedExecutionDate\": \"{{executionDate}}\",\r\n    \"chargeBearer\": \"SHAR\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-cross-border-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-cross-border-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{CROSS_BORDER_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{CROSS_BORDER_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Correct consent information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.consentStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{CROSS_BORDER_PAYMENT_ID}}/authorisations/{{CROSS_BORDER_PAYMENT_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{CROSS_BORDER_PAYMENT_ID}}",
+										"authorisations",
+										"{{CROSS_BORDER_PAYMENT_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Signing-Basket",
+					"item": [
+						{
+							"name": "Payment Initiate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"SIGNING_BASKET_PAYMENT_ID1\", pm.response.json().paymentId);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Explicit-Authorisation-Preferred",
+										"value": "true",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"endToEndIdentification\": \"878a7ec502c3408e8d708210a093f23f\",\r\n    \"debtorAccount\": {\r\n        \"bban\": \"36330000001\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"NOK\",\r\n        \"amount\": \"3.92\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"bban\": \"12100000006\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"creditorName\": \"Emma Larsen\",\r\n    \"remittanceInformationUnstructured\": \"Testing payment initiation\",\r\n    \"requestedExecutionDate\": \"{{executionDate}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Authorisations P1 - Empty",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"No authorisations exists for the payment resource\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationIds).lengthOf(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{SIGNING_BASKET_PAYMENT_ID1}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{SIGNING_BASKET_PAYMENT_ID1}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Payment Initiate 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"SIGNING_BASKET_PAYMENT_ID2\", pm.response.json().paymentId);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Explicit-Authorisation-Preferred",
+										"value": "true",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"endToEndIdentification\": \"878a7ec502c3408e8d708210a093f23f\",\r\n    \"debtorAccount\": {\r\n        \"bban\": \"36330000001\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"NOK\",\r\n        \"amount\": \"3.92\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"bban\": \"12100000006\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"creditorName\": \"Emma Larsen\",\r\n    \"remittanceInformationUnstructured\": \"Testing payment initiation\",\r\n    \"requestedExecutionDate\": \"{{executionDate}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Authorisations P2 - Empty",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"No authorisations exists for the payment resource\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationIds).lengthOf(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{SIGNING_BASKET_PAYMENT_ID1}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{SIGNING_BASKET_PAYMENT_ID1}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Signing-Basket Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"SIGNING_BASKET_ID\", pm.response.json().basketId);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"paymentIds\": [\r\n                 \"{{SIGNING_BASKET_PAYMENT_ID1}}\",\r\n                 \"{{SIGNING_BASKET_PAYMENT_ID2}}\"\r\n                ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/signing-baskets",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"signing-baskets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"SIGNING_BASKET_AUTHORISATION_ID\", pm.response.json().authorisationId);",
+											"",
+											"pm.test(\"Correct account information returns\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.authorisationId).to.not.be.empty;",
+											"    pm.expect(jsonData.scaStatus).to.equal(\"received\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HOST}}/v1/signing-baskets/{{SIGNING_BASKET_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"signing-baskets",
+										"{{SIGNING_BASKET_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Signing-Basket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"//pm.environment.set(\"SIGNING_BASKET_ID\", pm.response.json().paymentId);\r",
+											"//pm.environment.set(\"SIGNING_BASKET_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var paymentIds = pm.environment.get(\"paymentIds\");\r",
+											"arr = paymentIds.split(',');\r",
+											"pm.environment.set(\"paymentIdArrays\", JSON.stringify(arr));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"paymentIds\": {{paymentIdArrays}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/signing-baskets/{{SIGNING_BASKET_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"signing-baskets",
+										"{{SIGNING_BASKET_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Signing-Basket Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"//pm.environment.set(\"SIGNING_BASKET_ID\", pm.response.json().paymentId);\r",
+											"//pm.environment.set(\"SIGNING_BASKET_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var paymentIds = pm.environment.get(\"paymentIds\");\r",
+											"arr = paymentIds.split(',');\r",
+											"pm.environment.set(\"paymentIdArrays\", JSON.stringify(arr));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"paymentIds\": {{paymentIdArrays}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/signing-baskets/{{SIGNING_BASKET_ID}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"signing-baskets",
+										"{{SIGNING_BASKET_ID}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment1 Status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{SIGNING_BASKET_PAYMENT_ID1}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{SIGNING_BASKET_PAYMENT_ID1}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment2 Status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{SIGNING_BASKET_PAYMENT_ID2}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{SIGNING_BASKET_PAYMENT_ID2}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Norwegian Domestic Bulk",
+					"item": [
+						{
+							"name": "Payment Initiate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"BULK_PAYMENT_ID\", pm.response.json().paymentId);\r",
+											"pm.environment.set(\"BULK_PAYMENT_AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"postman.setGlobalVariable(\"v4uuid1\", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxx'.replace(/[xy]/g, function(c) { var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); }));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"paymentInformationId\":\"{{v4uuid1}}\",\r\n    \"debtorAccount\": {\r\n        \"bban\": \"35201000007\",\r\n        \"currency\": \"NOK\"\r\n    },\r\n    \"requestedExecutionDate\": \"{{executionDate}}\",\r\n    \"payments\": [\r\n        {\r\n            \"InstructionIdentification\": \"e7c3b7c6-bac9-4e31-9f24-1251683a1\",\r\n            \"instructedAmount\": {\r\n                \"amount\": \"0.1\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"creditorAccount\": {\r\n                \"bban\": \"36330000001\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"creditorName\": \"Nora Hansen\"\r\n        },\r\n        {\r\n            \"InstructionIdentification\": \"110577d2-1fc4-4e91-b9d1-79085a57b\",\r\n            \"instructedAmount\": {\r\n                \"amount\": \"0.1\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"creditorAccount\": {\r\n                \"bban\": \"36320000003\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"creditorName\": \"Nora Hansen\"\r\n        },\r\n        {\r\n            \"InstructionIdentification\": \"296d747c-8ace-47b9-b56a-5a3b8c24b\",\r\n            \"instructedAmount\": {\r\n                \"amount\": \"0.1\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"creditorAccount\": {\r\n                \"bban\": \"36700000006\",\r\n                \"currency\": \"NOK\"\r\n            },\r\n            \"remittanceInformationStructuredArray\": [\r\n                {\r\n                    \"reference\": \"3636363636\",\r\n                    \"referenceType\": \"SCOR\"\r\n                }\r\n            ],\r\n            \"creditorName\": \"Jacob Olsen\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID1\", pm.response.json().payments[0].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID2\", pm.response.json().payments[1].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID3\", pm.response.json().payments[2].paymentId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Payment Status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Sub Payment1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID1\", pm.response.json().payments[0].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID2\", pm.response.json().payments[1].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID3\", pm.response.json().payments[2].paymentId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{BULK_SUB_PAYMENT_ID1}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_SUB_PAYMENT_ID1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Sub Payment2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID1\", pm.response.json().payments[0].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID2\", pm.response.json().payments[1].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID3\", pm.response.json().payments[2].paymentId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{BULK_SUB_PAYMENT_ID2}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_SUB_PAYMENT_ID2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Sub Payment3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID1\", pm.response.json().payments[0].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID2\", pm.response.json().payments[1].paymentId);\r",
+											"pm.environment.set(\"BULK_SUB_PAYMENT_ID3\", pm.response.json().payments[2].paymentId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/payments/norwegian-domestic-credit-transfers/{{BULK_SUB_PAYMENT_ID3}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_SUB_PAYMENT_ID3}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bulk Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"BULK_AUTHORISATION_ID\", pm.response.json().authorisationId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Authorisations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"BULK_PAYMENT_AUTHORISATION_ID\", pm.response.json().authorisationIds[0]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Authorisation Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/authorisations/{{BULK_PAYMENT_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"authorisations",
+										"{{BULK_PAYMENT_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Bulk Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"BULK_CANCELLATION_AUTHORISATION_ID\", pm.response.json()._links.scaRedirect.href.split( '/' )[6].split('#')[1]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Cancellation Authorisations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"BULK_PAYMENT_CANCELLATION_AUTHORISATION_ID\", pm.response.json().cancellationIds[0]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/cancellation-authorisations",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"cancellation-authorisations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Bulk Cancellation Authorisation Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/cancellation-authorisations/{{BULK_PAYMENT_CANCELLATION_AUTHORISATION_ID}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"cancellation-authorisations",
+										"{{BULK_PAYMENT_CANCELLATION_AUTHORISATION_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bulk Cancellation Authorisation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId2}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-Corporate-ID",
+										"value": "{{CorporateId}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Nok-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/bulk-payments/norwegian-domestic-credit-transfers/{{BULK_PAYMENT_ID}}/cancellation-authorisations/",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"bulk-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{BULK_PAYMENT_ID}}",
+										"cancellation-authorisations",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Periodic",
+					"item": [
+						{
+							"name": "Create Periodic Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"CREATED_PERIODIC_PAYMENT_ID_PM\", pm.response.json().paymentId);\r",
+											"pm.environment.set(\"AUTHORISATION_ID\", pm.response.json()._links.scaStatus.href.split( '/' )[6]);\r",
+											"\r",
+											"\r",
+											"pm.test(\"Transaction status is pending(PDNG)\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.transactionStatus).to.eql(\"PDNG\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains a payment id\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.paymentId).to.not.be.undefined;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"result contains link to payment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData._links.self.href).to.include(jsonData.paymentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"debtorAccount\": {\r\n    \"bban\":\"36330000001\",\r\n    \"currency\": \"NOK\"\r\n  },\r\n  \"instructedAmount\": {\r\n    \"currency\": \"NOK\",\r\n    \"amount\": \"0.10\"\r\n  },\r\n  \"creditorAccount\": {\r\n    \"bban\": \"36700000006\",\r\n    \"currency\": \"NOK\"\r\n  },\r\n  \"StartDate\": \"2022-06-22\",\r\n  \"creditorName\": \"Jacob Olsen\",\r\n  \"frequency\": \"Monthly\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/periodic-payments/norwegian-domestic-credit-transfers",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"periodic-payments",
+										"norwegian-domestic-credit-transfers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Periodic Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/periodic-payments/norwegian-domestic-credit-transfers/{{CREATED_PERIODIC_PAYMENT_ID_PM}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"periodic-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{CREATED_PERIODIC_PAYMENT_ID_PM}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Periodic Payment Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Nok-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/periodic-payments/norwegian-domestic-credit-transfers/{{CREATED_PERIODIC_PAYMENT_ID_PM}}/status",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"periodic-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{CREATED_PERIODIC_PAYMENT_ID_PM}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Periodic Payment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202 or 204\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([202,204]);\r",
+											"});\r",
+											"\r",
+											"if(pm.response.code === 202){\r",
+											"    pm.environment.set(\"CANCELLATION_AUTHORISATION_ID\", pm.response.json()._links.scaRedirect.href.split( '/' )[6].split('#')[1]);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "PSU-ID",
+										"value": "{{PaymentServiceUserId1}}",
+										"type": "text"
+									},
+									{
+										"key": "PSU-IP-Address",
+										"value": "{{PsuIpAddress}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Request-ID",
+										"value": "{{$guid}}",
+										"type": "text"
+									},
+									{
+										"key": "TPP-Redirect-URI",
+										"value": "{{TPP-Redirect-URI}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HOST}}/v1/periodic-payments/norwegian-domestic-credit-transfers/{{CREATED_PERIODIC_PAYMENT_ID_PM}}",
+									"host": [
+										"{{HOST}}"
+									],
+									"path": [
+										"v1",
+										"periodic-payments",
+										"norwegian-domestic-credit-transfers",
+										"{{CREATED_PERIODIC_PAYMENT_ID_PM}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// get executionDate date ",
+					"var moment = require('moment');",
+					"var onedaylater = moment().add(1, 'day');",
+					"pm.variables.set('executionDate', onedaylater.format((\"YYYY-MM-DD\")));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "PsuIpAddress",
+			"value": "127.0.0.1",
+			"type": "string"
+		},
+		{
+			"key": "TPP-Redirect-URI",
+			"value": "https://redirect.url",
+			"type": "string"
+		},
+		{
+			"key": "TPP-Nok-Redirect-URI",
+			"value": "https://redirect.nok.url",
+			"type": "string"
+		},
+		{
+			"key": "CorporateId",
+			"value": "100000008",
+			"type": "string"
+		},
+		{
+			"key": "ConsentClientUserId",
+			"value": "01015450068",
+			"type": "string"
+		},
+		{
+			"key": "PaymentServiceUserId1",
+			"value": "01015450068",
+			"type": "string"
+		},
+		{
+			"key": "PaymentServiceUserId2",
+			"value": "04015450156",
+			"type": "string"
+		},
+		{
+			"key": "HOST",
+			"value": "https://psd2-sandbox.spvapi.no",
+			"type": "string"
+		}
+	]
+}
