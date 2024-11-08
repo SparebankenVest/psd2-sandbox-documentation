@@ -436,10 +436,9 @@
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
-											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
-											"});",
-											""
+											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.account.resourceId);",
+											"    pm.expect(jsonData.account.bban).to.equal(\"36330000001\");",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -506,10 +505,9 @@
 											"});",
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
-											"    var jsonData = pm.response.json();    ",
-											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
-											"});",
-											""
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.account.bban).to.equal(\"36330000001\");",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -571,10 +569,8 @@
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
-											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
-											"});",
-											""
+											"    pm.expect(jsonData.account.bban).to.equal(\"36330000001\");",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -780,8 +776,8 @@
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.accounts).to.not.be.empty;",
-											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"    pm.expect(jsonData.cardAccounts).to.not.be.empty;",
+											"    pm.expect(jsonData.cardAccounts[0].product).to.equal(\"VISA Gull.\");    ",
 											"});"
 										],
 										"type": "text/javascript"
@@ -845,8 +841,8 @@
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.accounts).to.not.be.empty;",
-											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"    pm.expect(jsonData.cardAccounts).to.not.be.empty;",
+											"    pm.expect(jsonData.cardAccounts[0].product).to.equal(\"VISA Gull.\");    ",
 											"});"
 										],
 										"type": "text/javascript"
@@ -912,12 +908,12 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().accounts[0].resourceId);",
+											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().cardAccount.resourceId);",
 											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.accounts).to.not.be.empty;",
-											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"    pm.expect(jsonData.cardAccount).to.not.be.empty;",
+											"    pm.expect(jsonData.cardAccount.product).to.equal(\"VISA Gull.\");    ",
 											"});"
 										],
 										"type": "text/javascript"
@@ -974,16 +970,10 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.environment.set(\"ACCOUNT_RESOURCE_ID\", pm.response.json().accounts[0].resourceId);",
-											"",
 											"pm.test(\"Correct account information returns\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.accounts).to.not.be.empty;",
-											"    pm.expect(jsonData.accounts[0].name).to.equal(\"VESTAVINN BRUKSKONTO\");    ",
+											"    pm.expect(jsonData.balances).to.not.be.empty;",
+											"    pm.expect(jsonData.balances[0].balanceAmount.amount).to.equal(\"10000.00\");",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1041,16 +1031,14 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.test(\"Correct account information returns\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.environment.set(\"SPECIFIC_ACCOUNT_NUMBER_RESOURCE_ID\", jsonData.accounts[1].resourceId);",
-											"    pm.expect(jsonData.accounts[1].bban).to.equal(\"36335412464\");",
-											"});",
-											""
+										"pm.test(\"Status code is 200\", function () {",
+										"    pm.response.to.have.status(200);",
+										"});",
+										"",
+										"pm.test(\"Correct account information returns\", function () {",
+										"    var jsonData = pm.response.json();",
+										"    pm.expect(jsonData.cardAccount.maskedPan).to.equal(\"4063********4656\");",
+										"});"	
 										],
 										"type": "text/javascript"
 									}
@@ -1086,7 +1074,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{HOST}}/v1/card-accounts/{{CARD_ACCOUNT_RESOURCE_ID}}/transactions?bookingStatus=both&dateFrom=2022-01-01",
+									"raw": "{{HOST}}/v1/card-accounts/{{CARD_ACCOUNT_RESOURCE_ID}}/transactions?bookingStatus=both&dateFrom=2024-01-01",
 									"host": [
 										"{{HOST}}"
 									],
